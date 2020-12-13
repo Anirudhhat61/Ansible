@@ -1,0 +1,18 @@
+#Installation of the new update 
+#Script would install the new upgrade zip file and reboot the system
+ 
+---
+- name: Get device information
+  hosts: switches
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: yes
+  tasks:
+#Task for installation of new update
+    - name: Installation
+      juniper_junos_command:
+        commands:
+          - "request system software add /var/tmp/<zip file> reboot"
+      tags:
+        - installation

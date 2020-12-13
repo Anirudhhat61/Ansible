@@ -1,0 +1,31 @@
+#After cronjob.yml script is executed run the management_configuration.yml
+#Below script is for the file -> management_configuration.yml
+#The script would save the configuration after every 4 hours. And compare it 
+#with the previously saved configuration and save the comparsion to the 
+#"difference_result" folder.
+
+---
+- name: Get device information
+  hosts: switches
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: yes
+  tasks:
+    - name: show config command
+      juniper_junos_command:
+        commands:
+          - "show system uptime"
+          - "show config"
+        dest: '/etc/ansible/regular_managementconfig/updated_configuration/{{ inventory_hostname }}_2_showconfig.txt'
+      register: showconfig_result
+ 
+ 
+    - name: Get comparison
+      local_action: shell diff /etc/ansible/regular_managementconfig/updated_configuration/{{ inventory_hostname }}_1_showconfig.txt /etc/ansible/regular_managementconfig/updated_configuration/{{ inventory_hostname }}_2_showconfig.txt > /etc/ansible/regular_managementconfig/difference_result/difference_result_showconfig.txt
+      failed_when: "diff_showconfig_result.rc > 1"
+      register: diff_showconfig_result
+#      tags:
+   
+    - name: replace new result with old
+      local_action: shell mv /etc/ansible/regular_managementconfig/updated_configuration/{{ inventory_hostname }}_2_showconfig.txt /etc/ansible/regular_managementconfig/updated_configuration/{{ inventory_hostname }}_1_showconfig.txt

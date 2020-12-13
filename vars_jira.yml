@@ -1,0 +1,5 @@
+Variable file in ansible to edit/store the various values to avoid the exposure in the script 
+#The ticket issue number in Jira is feed in this file "vars_jira.yml".
+#$cat /etc/ansible/firmwareupgrade/vars_jira.yml
+ 
+issue: BI-436

@@ -1,0 +1,19 @@
+#Once logged in Ansible-Poc (pao1-ansible-poc.corp.zuora.com)
+#Go to $ cd /etc/ansible/regular_managementconfig
+#This script would execute the job as per the hour and minute set for the job.
+#Following script is in cronjob.yml
+ 
+---
+- name: Get device information
+  hosts: switches
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: yes
+  tasks:
+    - name: Ensure a job that runs at 0,4,8,12,16,20 hrs.
+      cron:
+        name: "check show config"
+        minute: "30"
+        hour: "11,4,8,12,13,16,20"
+        job: "ansible-playbook /etc/ansible/regular_managementconfig/management_configuration.yml"

@@ -1,0 +1,23 @@
+---
+- name: Get device information
+  hosts: switches
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: yes
+  tasks:
+#Task for pre-upgrade command
+    - name: Get pre-work tasks
+      juniper_junos_command:
+        commands:
+          - "show version"       
+          - "show system storage partitions"
+          - "show system storage"
+          - "show chassis hardware"
+          - "show interfaces terse"
+          - "show virtual-chassis status"
+          - "show lldp neighbors"
+        dest: '/etc/ansible/firmwareupgrade/prework_result/{{ inventory_hostname }}_{{ansible_date_time.date}}.txt'
+      register: junos_result
+      tags:
+        - pre_upgrade

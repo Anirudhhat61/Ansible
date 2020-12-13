@@ -1,0 +1,13 @@
+---
+- name: Get device information
+  hosts: switches
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: yes
+  tasks:
+#Task for copying zip file from host to switch
+    - name: File scp from Ansible host to switch
+      local_action: shell scp /var/tmp/jinstall-ex-4300-18.4R2-S3-signed.tgz sw-test:/var/tmp/jinstall-ex-4300-18.4R2-S3-signed.tgz
+      tags:
+        - copy_file_host_switch

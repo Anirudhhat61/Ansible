@@ -1,0 +1,31 @@
+---
+- name: Get device information
+  hosts: switches
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: yes
+  tasks:
+#Tasks for updating jira ticket
+    - name: include secret
+      include_vars: '/etc/ansible/firmwareupgrade/secret_jira.yml'
+      tags:
+        - jira_ticket
+ 
+    - name: include variable
+      include_vars: '/etc/ansible/firmwareupgrade/vars_jira.yml'
+      tags:
+        - jira_ticket
+     
+    - name: Comment on issue
+      jira:
+        uri: 'www.url.com'
+        username: '{{ username }}'
+        password: '{{ jira_token }}'
+        issue: '{{ issue }}'
+        operation: comment
+        comment: Preupgrade task completed.
+      tags:
+        - jira_ticket
+
+
